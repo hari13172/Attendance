@@ -214,7 +214,8 @@ export default function StudentsPage() {
                         <Upload className="h-4 w-4" />
                         Import
                     </Button>
-                    <Button onClick={() => setIsAddStudentOpen(true)} className="gap-2 bg-sky-500 hover:bg-sky-600">
+                    <Button onClick={() => setIsAddStudentOpen(true)} className="gap-2 bg-sky-500
+                     hover:bg-sky-600">
                         <PlusCircle className="h-4 w-4" />
                         Add Student
                     </Button>
@@ -222,7 +223,7 @@ export default function StudentsPage() {
             </div>
 
             <Card className="border-none shadow-md">
-                <CardHeader className="border-b bg-gray-50/50 px-6">
+                <CardHeader className="border-b  px-6">
                     <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                         <div>
                             <CardTitle className="text-lg font-medium">Students Directory</CardTitle>
@@ -268,7 +269,7 @@ export default function StudentsPage() {
                         </div>
 
                         <div className="rounded-lg border">
-                            <div className="grid grid-cols-7 border-b bg-gray-50 px-6 py-3">
+                            <div className="grid grid-cols-7 border-b px-6 py-3">
                                 <div className="text-sm font-medium text-gray-500">Section</div>
                                 <div className="col-span-2 text-sm font-medium text-gray-500">Name</div>
                                 <div className="text-sm font-medium text-gray-500">Department</div>
@@ -283,7 +284,7 @@ export default function StudentsPage() {
                                         <div className="col-span-2 flex items-center gap-3">
                                             <Avatar className="h-8 w-8 border">
                                                 <AvatarImage src="/placeholder.svg?height=32&width=32" alt={student.name} />
-                                                <AvatarFallback className="bg-gray-100">{student.avatar}</AvatarFallback>
+                                                <AvatarFallback className="">{student.avatar}</AvatarFallback>
                                             </Avatar>
                                             <div>
                                                 <div className="text-sm font-medium">{student.name}</div>
@@ -295,11 +296,11 @@ export default function StudentsPage() {
                                         <div className="flex items-center gap-2">
                                             <Progress
                                                 value={student.attendance}
-                                                className={`h-2 w-16 bg-gray-100 ${student.attendance >= 90
-                                                        ? "indicator-green"
-                                                        : student.attendance >= 80
-                                                            ? "indicator-amber"
-                                                            : "indicator-rose"
+                                                className={`h-2 w-16  ${student.attendance >= 90
+                                                    ? "indicator-green"
+                                                    : student.attendance >= 80
+                                                        ? "indicator-amber"
+                                                        : "indicator-rose"
                                                     }`}
                                             />
                                             <span className="text-sm font-medium">{student.attendance}%</span>
