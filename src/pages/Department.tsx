@@ -170,7 +170,7 @@ export function DepartmentsPage() {
             </div>
 
             <Card className="border-none shadow-md">
-                <CardHeader className="border-b bg-gray-50/50 px-6">
+                <CardHeader className="border-b  px-6">
                     <CardTitle className="text-lg font-medium">Departments</CardTitle>
                     <CardDescription>View and manage all departments</CardDescription>
                 </CardHeader>
@@ -182,7 +182,7 @@ export function DepartmentsPage() {
                             <p className="text-red-500">Failed to load departments</p>
                         ) : (
                             <div className="rounded-lg border">
-                                <div className="grid grid-cols-3 border-b bg-gray-50 px-6 py-3">
+                                <div className="grid grid-cols-3 border-b  px-6 py-3">
                                     <div className="text-sm font-medium text-gray-500">Department Name</div>
                                     <div className="text-sm font-medium text-gray-500">Code</div>
                                     <div className="text-sm font-medium text-gray-500">Actions</div>

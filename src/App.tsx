@@ -1,4 +1,3 @@
-import type React from "react"
 import { Routes, Route, Navigate } from "react-router"
 import { LoginPage } from "./auth/login"
 import { Layout } from "./components/sidebar/layout"
@@ -13,6 +12,7 @@ import AuthLayout from "./components/sidebar/auth-layout"
 import { YearDetailPage } from "./pages/YearDetail"
 import { DepartmentDetailPage } from "./pages/DepartmentDetail"
 import { DepartmentsPage } from "./pages/Department"
+import { SectionsPage } from "./pages/Sections"
 
 
 
@@ -42,6 +42,7 @@ export default function App() {
           <Route path="settings" element={<SettingsPage />} />
           <Route path="department/:id" element={<DepartmentDetailPage />} />
           <Route path="department/:id/year/:yearId" element={<YearDetailPage />} />
+          <Route path="department/:id/year/:yearId/sections" element={<SectionsPage />} />
         </Route>
       </Route>
 
