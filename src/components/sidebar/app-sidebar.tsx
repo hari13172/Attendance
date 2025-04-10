@@ -1,7 +1,7 @@
 "use client"
 
 import { Link, useLocation } from "react-router"
-import { BarChart3, FileText, GraduationCap, Home, LogOut, Settings } from "lucide-react"
+import { BarChart3, CalendarCheck, FileText, GraduationCap, Home, LogOut, Settings, Users } from "lucide-react"
 
 import {
     Sidebar,
@@ -34,9 +34,19 @@ const navigationItems = [
         path: "/attendance",
     },
     {
+        title: "View Attendance",
+        icon: CalendarCheck,
+        path: "/view-attendance",
+    },
+    {
         title: "Reports",
         icon: FileText,
         path: "/reports",
+    },
+    {
+        title: "Users",
+        icon: Users,
+        path: "/users",
     },
     {
         title: "Settings",
@@ -50,7 +60,7 @@ export function AppSidebar() {
     const { logout } = useAuth()
 
     return (
-        <Sidebar className="border-r" collapsible="icon">
+        <Sidebar className="border-r">
             <SidebarHeader className="border-b">
                 <div className="p-4">
                     <div className="flex items-center gap-2">

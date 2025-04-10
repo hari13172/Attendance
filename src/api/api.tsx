@@ -1,0 +1,1 @@
+export const base_path = "http://10.5.0.2:8001/api";

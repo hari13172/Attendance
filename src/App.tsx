@@ -6,9 +6,11 @@ import { LoginPage } from "./auth/login"
 import { Layout } from "./components/sidebar/layout"
 import OverviewPage from "./pages/Dashboard"
 import StudentsPage from "./pages/Student"
-import AttendancePage from "./pages/Attendance"
 import ReportsPage from "./pages/Report"
 import SettingsPage from "./pages/Setting"
+import { UsersPage } from "./pages/Users"
+import { ViewAttendancePage } from "./pages/ViewAttendance"
+import { AttendancePage } from "./pages/Attendance"
 
 
 
@@ -64,7 +66,9 @@ export default function App() {
           <Route index element={<OverviewPage />} />
           <Route path="students" element={<StudentsPage />} />
           <Route path="attendance" element={<AttendancePage />} />
+          <Route path="view-attendance" element={<ViewAttendancePage />} />
           <Route path="reports" element={<ReportsPage />} />
+          <Route path="users" element={<UsersPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 

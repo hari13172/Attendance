@@ -15,6 +15,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+
 import { useAuth } from "@/context/auth-context"
 import { AppSidebar } from "./app-sidebar"
 
@@ -68,6 +69,7 @@ export function Layout() {
                 <main className="container mx-auto max-w-7xl p-6">
                     <Outlet />
                 </main>
+
             </SidebarInset>
         </SidebarProvider>
     )
