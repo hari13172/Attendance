@@ -49,12 +49,6 @@ export default function App() {
 
       {/* Logout route */}
       <Route path="/logout" element={<Navigate to="/auth/login" replace />} />
-
-      {/* Catch-all redirect to login or home based on auth status */}
-      {/* <Route
-        path="*"
-        element={localStorage.getItem("user") ? <Navigate to="/" replace /> : <Navigate to="/auth/login" replace />}
-      /> */}
     </Routes>
 
 
