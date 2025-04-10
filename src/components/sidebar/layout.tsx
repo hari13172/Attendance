@@ -16,11 +16,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
-import { useAuth } from "@/context/auth-context"
+
 import { AppSidebar } from "./app-sidebar"
 
 export function Layout() {
-    const { user, logout } = useAuth()
+
 
     return (
         <SidebarProvider>
@@ -47,10 +47,10 @@ export function Layout() {
                                     <Avatar className="h-8 w-8 border">
                                         <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Admin" />
                                         <AvatarFallback className="bg-gradient-to-br from-sky-500 to-sky-600 text-white">
-                                            {user?.name.charAt(0) || "A"}
+                                            {"A"}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <span className="text-sm font-medium">{user?.name || "Admin"}</span>
+                                    <span className="text-sm font-medium">{"Admin"}</span>
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56">
@@ -59,7 +59,7 @@ export function Layout() {
                                 <DropdownMenuItem>Profile</DropdownMenuItem>
                                 <DropdownMenuItem>Settings</DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={logout} className="text-rose-500">
+                                <DropdownMenuItem className="text-rose-500">
                                     Logout
                                 </DropdownMenuItem>
                             </DropdownMenuContent>

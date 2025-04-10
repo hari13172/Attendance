@@ -14,7 +14,6 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
-import { useAuth } from "@/context/auth-context"
 
 // Navigation items
 const navigationItems = [
@@ -57,7 +56,7 @@ const navigationItems = [
 
 export function AppSidebar() {
     const location = useLocation()
-    const { logout } = useAuth()
+
 
     return (
         <Sidebar className="border-r">
@@ -104,7 +103,7 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <button
-                                onClick={logout}
+
                                 className="flex w-full items-center text-gray-600 transition-all hover:bg-rose-50 hover:text-rose-600"
                             >
                                 <LogOut className="mr-3 h-5 w-5 text-gray-500" />

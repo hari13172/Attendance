@@ -1,19 +1,38 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router"
 import type React from "react"
-
+import { useMutation } from "@tanstack/react-query"
 import { Eye, EyeOff, Lock, LogIn, User } from "lucide-react"
+import { setCookie } from 'typescript-cookie'
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useAuth } from "@/context/auth-context"
+import { Toaster, toast } from "sonner" // Import sonner
+import { base_path } from "@/api/api"
+
+async function loginUser({ username, password, rememberMe }: { username: string; password: string; rememberMe: boolean }) {
+    const response = await fetch(`${base_path}/users/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password, rememberMe }),
+    })
+
+    if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Login failed')
+    }
+
+    return response.json()
+}
 
 export function LoginPage() {
-    const { login, isLoading, isAuthenticated } = useAuth()
+    const [customToast, setCustomToast] = useState<{ title: string; description?: string; variant?: "default" | "destructive" | "success" } | null>(null)
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState({
@@ -27,17 +46,38 @@ export function LoginPage() {
         general: "",
     })
 
-    // Redirect if already authenticated
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate("/", { replace: true })
-        }
-    }, [isAuthenticated, navigate])
+    const loginMutation = useMutation({
+        mutationFn: loginUser,
+        onSuccess: (data) => {
+            // Assuming API returns { user: { id, username, name, role }, token }
+            setCookie('access_token', data.access_token, { expires: 30 }) // Set token with 30-day expiry
+            setCookie('token_type', data.token_type, { expires: 30 }) // Set token type with 30-day expiry
+
+            toast.success("Login successful", {
+                description: "Welcome back!",
+            })
+            // Redirect to the home page or dashboard
+            setTimeout(() => navigate("/", { replace: true }), 500) // Delay navigation for toast visibility
+
+        },
+        onError: (error: Error) => {
+            setErrors((prev) => ({
+                ...prev,
+                general: error.message || "Invalid username or password",
+            }))
+            // Show error toast
+            setCustomToast({
+                title: "Login failed",
+                description: error.message || "Invalid username or password",
+                variant: "destructive",
+            })
+        },
+    })
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
         setFormData((prev) => ({ ...prev, [name]: value }))
-        // Clear error when user types
         if (errors[name as keyof typeof errors]) {
             setErrors((prev) => ({ ...prev, [name]: "" }))
         }
@@ -77,15 +117,11 @@ export function LoginPage() {
 
         if (!validateForm()) return
 
-        try {
-            await login(formData.username, formData.password, formData.rememberMe)
-            // Navigation is handled in the auth context
-        } catch (error) {
-            setErrors((prev) => ({
-                ...prev,
-                general: "Invalid username or password",
-            }))
-        }
+        loginMutation.mutate({
+            username: formData.username,
+            password: formData.password,
+            rememberMe: formData.rememberMe,
+        })
     }
 
     return (
@@ -165,8 +201,8 @@ export function LoginPage() {
                         </CardContent>
 
                         <CardFooter>
-                            <Button type="submit" className="w-full bg-sky-500 hover:bg-sky-600" disabled={isLoading}>
-                                {isLoading ? (
+                            <Button type="submit" className="w-full bg-sky-500 hover:bg-sky-600" disabled={loginMutation.isPending}>
+                                {loginMutation.isPending ? (
                                     <div className="flex items-center gap-2">
                                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
                                         <span>Signing in...</span>
