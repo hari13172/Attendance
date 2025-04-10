@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import type React from "react"
+import { useMutation } from "@tanstack/react-query"
 
 import {
     ChevronDown,
@@ -38,6 +39,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { getAuthToken } from "@/api/getAuthToken"
 
 // Sample data
 const studentsData = [
@@ -93,9 +95,41 @@ const studentsData = [
     },
 ]
 
+// API function to upload students
+async function uploadStudents(file: File) {
+    const formData = new FormData()
+    formData.append("file", file) // Ensure 'file' matches the API's expected field name
+
+    const response = await fetch("http://10.5.0.2:8001/api/upload_students/", {
+        method: "POST",
+        body: formData,
+
+        // Remove Content-Type header; fetch sets multipart/form-data automatically with FormData
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${getAuthToken()}`,
+        },
+
+    })
+    console.log("Upload response", formData, response)
+
+    if (!response.ok) {
+        const errorData = await response.json()
+        // Construct a detailed error message from the API response
+        const errorMessage =
+            errorData.detail ||
+            errorData.errors?.map((err: any) => err.msg).join(", ") ||
+            "Failed to upload students"
+        throw new Error(errorMessage)
+    }
+
+    return response.json() // Expecting student data or a success message
+}
+
 export default function StudentsPage() {
     const [students, setStudents] = useState(studentsData)
     const [isAddStudentOpen, setIsAddStudentOpen] = useState(false)
+    const [isImportDialogOpen, setIsImportDialogOpen] = useState(false)
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
     const [selectedStudent, setSelectedStudent] = useState<(typeof studentsData)[0] | null>(null)
     const [newStudent, setNewStudent] = useState({
@@ -105,21 +139,54 @@ export default function StudentsPage() {
         department: "Computer Science",
         year: "1st Year",
     })
+    const [importFile, setImportFile] = useState<File | null>(null)
     const [errors, setErrors] = useState({
         name: "",
         rollNo: "",
+        import: "",
     })
 
     useEffect(() => {
-        // Update the page title
         const pageTitle = document.getElementById("page-title")
         if (pageTitle) pageTitle.textContent = "Students"
     }, [])
 
+    const uploadMutation = useMutation({
+        mutationFn: uploadStudents,
+        onSuccess: (data) => {
+            // Adjust based on actual API response structure
+            if (Array.isArray(data)) {
+                const newStudents = data.map((student: any, index: number) => ({
+                    id: students.length + index + 1,
+                    rollNo: student.rollNo,
+                    name: student.name,
+                    avatar: student.name
+                        .split(" ")
+                        .map((n: string) => n[0])
+                        .join("")
+                        .toUpperCase(),
+                    section: student.section,
+                    department: student.department,
+                    year: student.year,
+                    attendance: student.attendance || Math.floor(Math.random() * 20) + 80,
+                }))
+                setStudents((prev) => [...prev, ...newStudents])
+            }
+            setIsImportDialogOpen(false)
+            setImportFile(null)
+            setErrors((prev) => ({ ...prev, import: "" }))
+        },
+        onError: (error: Error) => {
+            setErrors((prev) => ({
+                ...prev,
+                import: error.message,
+            }))
+        },
+    })
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
         setNewStudent((prev) => ({ ...prev, [name]: value }))
-        // Clear error when user types
         if (errors[name as keyof typeof errors]) {
             setErrors((prev) => ({ ...prev, [name]: "" }))
         }
@@ -129,6 +196,7 @@ export default function StudentsPage() {
         const newErrors = {
             name: "",
             rollNo: "",
+            import: "",
         }
         let isValid = true
 
@@ -157,7 +225,7 @@ export default function StudentsPage() {
                 .map((n) => n[0])
                 .join("")
                 .toUpperCase(),
-            attendance: Math.floor(Math.random() * 20) + 80, // Random attendance between 80-100
+            attendance: Math.floor(Math.random() * 20) + 80,
         }
 
         setStudents((prev) => [...prev, newStudentData])
@@ -177,6 +245,20 @@ export default function StudentsPage() {
             setIsDeleteDialogOpen(false)
             setSelectedStudent(null)
         }
+    }
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null
+        setImportFile(file)
+        setErrors((prev) => ({ ...prev, import: "" }))
+    }
+
+    const handleImportStudents = () => {
+        if (!importFile) {
+            setErrors((prev) => ({ ...prev, import: "Please select a file to upload" }))
+            return
+        }
+        uploadMutation.mutate(importFile)
     }
 
     return (
@@ -210,12 +292,11 @@ export default function StudentsPage() {
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="outline" className="gap-2">
+                    <Button variant="outline" className="gap-2" onClick={() => setIsImportDialogOpen(true)}>
                         <Upload className="h-4 w-4" />
                         Import
                     </Button>
-                    <Button onClick={() => setIsAddStudentOpen(true)} className="gap-2 bg-sky-500
-                     hover:bg-sky-600">
+                    <Button onClick={() => setIsAddStudentOpen(true)} className="gap-2 bg-sky-500 hover:bg-sky-600">
                         <PlusCircle className="h-4 w-4" />
                         Add Student
                     </Button>
@@ -223,7 +304,7 @@ export default function StudentsPage() {
             </div>
 
             <Card className="border-none shadow-md">
-                <CardHeader className="border-b  px-6">
+                <CardHeader className="border-b px-6">
                     <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                         <div>
                             <CardTitle className="text-lg font-medium">Students Directory</CardTitle>
@@ -296,7 +377,7 @@ export default function StudentsPage() {
                                         <div className="flex items-center gap-2">
                                             <Progress
                                                 value={student.attendance}
-                                                className={`h-2 w-16  ${student.attendance >= 90
+                                                className={`h-2 w-16 ${student.attendance >= 90
                                                     ? "indicator-green"
                                                     : student.attendance >= 80
                                                         ? "indicator-amber"
@@ -460,6 +541,41 @@ export default function StudentsPage() {
                         </Button>
                         <Button onClick={handleAddStudent} className="bg-sky-500 hover:bg-sky-600">
                             Add Student
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Import Students Dialog */}
+            <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Import Students</DialogTitle>
+                        <DialogDescription>Upload a file to import multiple students at once.</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="file">Upload File</Label>
+                            <Input
+                                id="file"
+                                type="file"
+                                accept=".csv,.xlsx" // Adjust based on API requirements
+                                onChange={handleFileChange}
+                                className={errors.import ? "border-red-500" : ""}
+                            />
+                            {errors.import && <p className="text-xs text-red-500">{errors.import}</p>}
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsImportDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleImportStudents}
+                            className="bg-sky-500 hover:bg-sky-600"
+                            disabled={uploadMutation.isPending}
+                        >
+                            {uploadMutation.isPending ? "Uploading..." : "Import"}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

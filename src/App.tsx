@@ -10,6 +10,8 @@ import { UsersPage } from "./pages/Users"
 import { ViewAttendancePage } from "./pages/ViewAttendance"
 import { AttendancePage } from "./pages/Attendance"
 import AuthLayout from "./components/sidebar/auth-layout"
+import { YearDetailPage } from "./pages/YearDetail"
+import { DepartmentDetailPage } from "./pages/DepartmentDetail"
 
 
 
@@ -36,6 +38,8 @@ export default function App() {
           <Route path="reports" element={<ReportsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="department/:id" element={<DepartmentDetailPage />} />
+          <Route path="department/:id/year/:yearId" element={<YearDetailPage />} />
         </Route>
       </Route>
 
