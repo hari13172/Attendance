@@ -1,7 +1,7 @@
 "use client"
 
 import { Link, useLocation } from "react-router"
-import { BarChart3, CalendarCheck, FileText, GraduationCap, Home, LogOut, Settings, Users } from "lucide-react"
+import { BarChart3, CalendarCheck, FileText, GraduationCap, Home, LogOut, Settings, Users, Building, } from "lucide-react"
 
 import {
     Sidebar,
@@ -36,6 +36,11 @@ const navigationItems = [
         title: "View Attendance",
         icon: CalendarCheck,
         path: "/view-attendance",
+    },
+    {
+        title: "Departments",
+        icon: Building,
+        path: "/departments",
     },
     {
         title: "Reports",

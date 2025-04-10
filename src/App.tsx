@@ -12,6 +12,7 @@ import { AttendancePage } from "./pages/Attendance"
 import AuthLayout from "./components/sidebar/auth-layout"
 import { YearDetailPage } from "./pages/YearDetail"
 import { DepartmentDetailPage } from "./pages/DepartmentDetail"
+import { DepartmentsPage } from "./pages/Department"
 
 
 
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="students" element={<StudentsPage />} />
           <Route path="attendance" element={<AttendancePage />} />
           <Route path="view-attendance" element={<ViewAttendancePage />} />
+          <Route path="departments" element={<DepartmentsPage />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="settings" element={<SettingsPage />} />

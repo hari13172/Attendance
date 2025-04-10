@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { ArrowLeft, Plus } from "lucide-react"
 
@@ -18,14 +18,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 
-// Sample department data
-const departmentsData = [
-    { id: 1, name: "Computer Science", code: "CS" },
-    { id: 2, name: "Electrical Engineering", code: "EE" },
-    { id: 3, name: "Mechanical Engineering", code: "ME" },
-    { id: 4, name: "Civil Engineering", code: "CE" },
-]
-
 // Sample academic years
 const initialAcademicYears = [
     { id: 1, name: "2024-2025" },
@@ -35,27 +27,12 @@ const initialAcademicYears = [
 ]
 
 export function DepartmentDetailPage() {
-    const { id } = useParams()
+    const { id } = useParams() // Get department ID from URL params
     const navigate = useNavigate()
     const [academicYears, setAcademicYears] = useState(initialAcademicYears)
     const [isAddYearOpen, setIsAddYearOpen] = useState(false)
     const [newYear, setNewYear] = useState("")
     const [error, setError] = useState("")
-
-    const department = departmentsData.find((dept) => dept.id === Number(id))
-
-    useEffect(() => {
-        // Update the page title
-        const pageTitle = document.getElementById("page-title")
-        if (pageTitle && department) pageTitle.textContent = department.name
-    }, [department])
-
-    useEffect(() => {
-        if (!department) {
-            // Redirect to settings if department not found
-            navigate("/settings")
-        }
-    }, [department, navigate])
 
     const handleAddYear = () => {
         if (!newYear.trim()) {
@@ -86,13 +63,7 @@ export function DepartmentDetailPage() {
     }
 
     const handleYearClick = (yearId: number, yearName: string) => {
-        if (department) {
-            navigate(`/department/${department.id}/year/${yearId}`, { state: { yearName } })
-        }
-    }
-
-    if (!department) {
-        return <div>Loading...</div>
+        navigate(`/department/${id}/year/${yearId}`, { state: { yearName } })
     }
 
     return (
@@ -103,8 +74,8 @@ export function DepartmentDetailPage() {
                         <ArrowLeft className="h-4 w-4" />
                     </Button>
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-800">{department.name}</h2>
-                        <p className="text-sm text-gray-500">Department Code: {department.code}</p>
+                        <h2 className="text-2xl font-bold text-gray-800">Department ID: {id}</h2>
+                        <p className="text-sm text-gray-500">Details for department with ID {id}</p>
                     </div>
                 </div>
                 <Button className="gap-2 bg-sky-500 hover:bg-sky-600" onClick={() => setIsAddYearOpen(true)}>
