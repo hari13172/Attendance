@@ -1,3 +1,5 @@
+"use client"
+
 import { Outlet } from "react-router"
 import { Bell } from "lucide-react"
 
@@ -13,9 +15,12 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { useAuth } from "@/context/auth-context"
 import { AppSidebar } from "./app-sidebar"
 
 export function Layout() {
+    const { user, logout } = useAuth()
+
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -40,9 +45,11 @@ export function Layout() {
                                 <Button variant="ghost" className="flex items-center gap-2 rounded-full px-2 py-1 hover:bg-gray-100">
                                     <Avatar className="h-8 w-8 border">
                                         <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Admin" />
-                                        <AvatarFallback className="bg-gradient-to-br from-sky-500 to-sky-600 text-white">A</AvatarFallback>
+                                        <AvatarFallback className="bg-gradient-to-br from-sky-500 to-sky-600 text-white">
+                                            {user?.name.charAt(0) || "A"}
+                                        </AvatarFallback>
                                     </Avatar>
-                                    <span className="text-sm font-medium">Admin</span>
+                                    <span className="text-sm font-medium">{user?.name || "Admin"}</span>
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56">
@@ -51,7 +58,9 @@ export function Layout() {
                                 <DropdownMenuItem>Profile</DropdownMenuItem>
                                 <DropdownMenuItem>Settings</DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-rose-500">Logout</DropdownMenuItem>
+                                <DropdownMenuItem onClick={logout} className="text-rose-500">
+                                    Logout
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

@@ -1,3 +1,5 @@
+"use client"
+
 import { Link, useLocation } from "react-router"
 import { BarChart3, FileText, GraduationCap, Home, LogOut, Settings } from "lucide-react"
 
@@ -12,6 +14,7 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
+import { useAuth } from "@/context/auth-context"
 
 // Navigation items
 const navigationItems = [
@@ -44,9 +47,10 @@ const navigationItems = [
 
 export function AppSidebar() {
     const location = useLocation()
+    const { logout } = useAuth()
 
     return (
-        <Sidebar className="border-r">
+        <Sidebar className="border-r" collapsible="icon">
             <SidebarHeader className="border-b">
                 <div className="p-4">
                     <div className="flex items-center gap-2">
@@ -89,13 +93,13 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link
-                                to="/logout"
-                                className="flex items-center text-gray-600 transition-all hover:bg-rose-50 hover:text-rose-600"
+                            <button
+                                onClick={logout}
+                                className="flex w-full items-center text-gray-600 transition-all hover:bg-rose-50 hover:text-rose-600"
                             >
                                 <LogOut className="mr-3 h-5 w-5 text-gray-500" />
                                 <span>Logout</span>
-                            </Link>
+                            </button>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
