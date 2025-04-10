@@ -43,15 +43,17 @@ function AuthLayer() {
         enabled: true, // Disable automatic query
     });
 
-    if (user.id !== null && user.username !== "" && user.role !== "") {
-        return <Outlet />;
+    console.log("AuthLayer data", data);
+
+    setUser(data);
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <p className="text-lg">Loading...</p>
+            </div>
+        );
     }
 
-
-
-    if (data?.id && data?.username && data?.role?.role) {
-        setUser({ id: data.id, username: data.username, role: data.role.role });
-    }
 
     return (
         <Outlet />

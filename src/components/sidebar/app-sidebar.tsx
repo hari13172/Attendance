@@ -103,7 +103,13 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <button
+                                onClick={() => {
+                                    // Clear cookies
+                                    document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
+                                    // Redirect to login page
+                                    window.location.href = "/auth/login";
+                                }}
                                 className="flex w-full items-center text-gray-600 transition-all hover:bg-rose-50 hover:text-rose-600"
                             >
                                 <LogOut className="mr-3 h-5 w-5 text-gray-500" />
@@ -116,4 +122,4 @@ export function AppSidebar() {
             <SidebarRail />
         </Sidebar>
     )
-}
+}                                                                                                   
